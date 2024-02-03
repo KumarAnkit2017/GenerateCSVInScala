@@ -22,15 +22,15 @@ object GenerateCSV {
       for (patient<- 1 to noOfRecords) {
         val record = Patients(
           patient,
-          randomString(5),
-          randomString(8),
+          randomName(5),
+          randomName(8),
           randomGender(),
-          randomDate(),
-          randomString(8),
-          randomString(10),
-          randomString(10),
+          randomBirthDate(),
+          randomName(8),
+          randomProvinceId(),
+          randomName(10),
           Random.nextInt(50) + 150,
-          Random.nextInt(50) + 50
+          Random.nextInt(50) + 70
         )
 
         writer.writeNext(record.patient_id.toString,record.first_name,record.last_name,record.gender.toString,record.birth_date.toString,
@@ -46,14 +46,18 @@ object GenerateCSV {
     }
   }
 
-  def randomString(length: Int): String ={
+  def randomName(length: Int): String ={
     Random.alphanumeric.take(length).mkString
   }
   def randomGender(): Char =
     {
       if (Random.nextBoolean()) 'M' else 'F'
     }
-  def randomDate(): Date =
+
+ def randomProvinceId():String={
+   if (Random.nextBoolean()) "ON" else "OF"
+ }
+  def randomBirthDate(): Date =
     {
       Date.valueOf(s"${Random.nextInt(30) + 1970}-${Random.nextInt(12) + 1}-${Random.nextInt(28) + 1}")
     }
