@@ -76,8 +76,8 @@ class RandamDataGenerator {
       }
 
     // Function to generate random gender ('M' or 'F')
-      def randomGender(): Char = {
-        if (Random.nextBoolean()) 'M' else 'F'
+      def randomGender(): String = {
+        if (Random.nextBoolean()) "M" else "F"
       }
 
     // Function to generate a random province ID ("ON" or "OF")

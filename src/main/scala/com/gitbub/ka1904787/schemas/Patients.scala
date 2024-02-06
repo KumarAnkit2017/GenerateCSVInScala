@@ -3,13 +3,13 @@ package com.gitbub.ka1904787.schemas
 import java.sql.Date
 
 case class Patients(
-                     patient_id: Integer,
-                     first_name: String,
-                     last_name: String,
-                     gender: Char,
-                     birth_date: Date,
+                     patientId: Integer,
+                     firstName: String,
+                     lastName: String,
+                     gender: String,
+                     birthDate: Date,
                      city: String,
-                     provide_id: String,
+                     provideId: String,
                      allergies: String,
                      height: Integer,
                      weight: Integer
