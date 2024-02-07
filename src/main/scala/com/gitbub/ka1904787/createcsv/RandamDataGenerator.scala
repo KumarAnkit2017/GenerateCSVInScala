@@ -25,7 +25,7 @@ class RandamDataGenerator {
           randomBirthDate(),
           randomName(8),
           randomProvinceId(),
-          randomName(10),
+          randomAllergies(10),
           Random.nextInt(50) + 150,
           Random.nextInt(50) + 70
         )
@@ -84,6 +84,10 @@ class RandamDataGenerator {
       def randomProvinceId(): String = {
         if (Random.nextBoolean()) "ON" else "OF"
       }
+
+    def randomAllergies(length:Int): String = {
+      if (Random.nextBoolean()){Random.alphanumeric.take(length).mkString} else{  ""}
+    }
 
     // Function to generate a random birth date
       def randomBirthDate(): Date = {

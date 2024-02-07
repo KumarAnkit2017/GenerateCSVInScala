@@ -15,3 +15,15 @@ case class Patients(
                      weight: Integer
 
                    )
+
+case class PatientsName(
+                     firstName: String,
+                     lastName: String,
+
+                   )
+
+case class PatientsFirstName(
+                         firstName: String,
+                       )
+
+
