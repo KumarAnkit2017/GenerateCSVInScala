@@ -9,7 +9,7 @@ case class Patients(
                      gender: String,
                      birthDate: Date,
                      city: String,
-                     provideId: String,
+                     provinceId: String,
                      allergies: String,
                      height: Integer,
                      weight: Integer

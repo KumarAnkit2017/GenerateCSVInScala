@@ -9,12 +9,14 @@ import scala.util.{Random, Using}
 
 class RandamDataGenerator {
 
+  val dataList = List("AB", "BC", "MB", "NB", "NL", "NT", "NS", "NU")
+
   def writeCsv(outputPath: String, noOfRecords: Integer): Unit = {
 
     Using(new CSVWriter(new FileWriter(outputPath))) { writer =>
 
-      writer.writeNext(Array("patient_id", "first_name", "last_name", "gender", "birth_date",
-        "city", "provide_id", "allergies", "height", "weight"))
+      writer.writeNext(Array("patientId", "firstName", "lastName", "gender", "birthDate",
+        "city", "provinceId", "allergies", "height", "weight"))
 
       for (patient <- 1 to noOfRecords) {
         val record =Patients(
@@ -24,7 +26,7 @@ class RandamDataGenerator {
           randomGender(),
           randomBirthDate(),
           randomName(8),
-          randomProvinceId(),
+          randomProvinceId(6,dataList),
           randomAllergies(10),
           Random.nextInt(50) + 150,
           Random.nextInt(50) + 70
@@ -80,13 +82,18 @@ class RandamDataGenerator {
         if (Random.nextBoolean()) "M" else "F"
       }
 
-    // Function to generate a random province ID ("ON" or "OF")
-      def randomProvinceId(): String = {
-        if (Random.nextBoolean()) "ON" else "OF"
+    // Function to generate a random province ID
+    def randomProvinceId(len: Int, dataList: List[String]): String = {
+      val random = new Random
+      var province: String = new String();
+      for (s <- 1 to len) {
+        province= dataList(random.nextInt(s))
       }
+      province
+    }
 
     def randomAllergies(length:Int): String = {
-      if (Random.nextBoolean()){Random.alphanumeric.take(length).mkString} else{  ""}
+      if (Random.nextBoolean()){Random.alphanumeric.take(length).mkString} else{""}
     }
 
     // Function to generate a random birth date
