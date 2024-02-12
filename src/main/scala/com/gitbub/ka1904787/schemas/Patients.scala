@@ -17,13 +17,13 @@ case class Patients(
                    )
 
 case class PatientsName(
-                     firstName: String,
-                     lastName: String,
+                         firstName: String,
+                         lastName: String,
 
-                   )
+                       )
 
 case class PatientsFirstName(
-                         firstName: String,
-                       )
+                              firstName: String,
+                            )
 
 

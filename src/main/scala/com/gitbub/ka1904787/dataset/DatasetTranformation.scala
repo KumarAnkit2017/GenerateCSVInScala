@@ -1,6 +1,6 @@
 package com.gitbub.ka1904787.dataset
 
-import com.gitbub.ka1904787.schemas.{PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 
 object DatasetTranformation {
@@ -17,11 +17,16 @@ object DatasetTranformation {
     ////Csv Patient Path
     val csvProvincePath = "E:\\Scala\\province_names.csv"
 
+    // admission path
+    val csvAdmissionPath = "E:\\Scala\\admision.csv"
+
     //Loading Patient CSV File in Dataset
     import spark.implicits._
     val loadPateintInDataSet: Dataset[Patients] = spark.read.format("csv").schema(Encoders.product[Patients].schema).option("header","true").csv(csvPatientPath).as[Patients]
 
     val loadProvinceInDataSet: Dataset[ProvinceName] = spark.read.format("csv").schema(Encoders.product[ProvinceName].schema).option("header","true").csv(csvProvincePath).as[ProvinceName]
+
+    val loadAdmissionInDataSet: Dataset[Admission] = spark.read.format("csv").schema(Encoders.product[Admission].schema).option("header","true").csv(csvAdmissionPath).as[Admission]
 
 
     //show Patient in form of Dataset
@@ -29,6 +34,9 @@ object DatasetTranformation {
 
     //show Province Data in form of Dataset
     loadProvinceInDataSet.show()
+
+    //show Admission Data in form of Dataset
+    loadAdmissionInDataSet.show()
 
     //1. Show first name and last name of patients whose gender is M
     //loadCsvInDataSet.filter(filterByMale=>filterByMale.gender=="M").select($"firstName", $"lastName",$"gender")
@@ -61,6 +69,11 @@ object DatasetTranformation {
     val joinPatientWithProvince= loadPateintInDataSet.joinWith(loadProvinceInDataSet,loadPateintInDataSet("provinceId")===loadProvinceInDataSet("provinceId")).as("patient")
     joinPatientWithProvince.map(patientProvince=>PatientProvince(patientProvince._1.firstName,patientProvince._1.lastName,patientProvince._2.provinceName)).show()
 
+
+    //Medium
+    //8. Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'.
+    val joinPateintWithAdmission=loadPateintInDataSet.joinWith(loadAdmissionInDataSet,loadAdmissionInDataSet("patientId")===loadPateintInDataSet("patientId"))
+    joinPateintWithAdmission.map(pateintAdmission=>AdmissionAndPatient(pateintAdmission._1.patientId,pateintAdmission._1.firstName,pateintAdmission._1.lastName,pateintAdmission._2.diagnosis)).filter(dementiaPatient=>dementiaPatient.diagnosis=="Dementia")show(100)
 
 
 

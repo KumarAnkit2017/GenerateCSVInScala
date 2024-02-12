@@ -1,6 +1,6 @@
 package com.gitbub.ka1904787.dataframe
 
-import com.gitbub.ka1904787.schemas.{PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 import org.apache.spark.sql.functions.{aggregate, coalesce, col, concat, lit}
@@ -17,11 +17,17 @@ object DataframeTransformation {
     ////Csv Patient Path
     val csvProvincePath = "E:\\Scala\\province_names.csv"
 
+
+    // admission path
+    val csvAdmissionPath = "E:\\Scala\\admision.csv"
+
     //Loading Patient CSV File in Dataset
     import spark.implicits._
     val loadPateintInDataFrame = spark.read.format("csv").schema(Encoders.product[Patients].schema).option("header","true").csv(csvPatientPath)
 
     val loadProvinceInDataFrame = spark.read.format("csv").schema(Encoders.product[ProvinceName].schema).option("header","true").csv(csvProvincePath)
+
+    val loadAdmissionInDataFrame= spark.read.format("csv").schema(Encoders.product[Admission].schema).option("header","true").csv(csvAdmissionPath)
 
 
     //show Patient in form of Dataset
@@ -29,6 +35,9 @@ object DataframeTransformation {
 
     //show Province Data in form of Dataset
     loadProvinceInDataFrame.show()
+
+    //show Admission Data in form of Dataset
+    loadAdmissionInDataFrame.show()
 
     //1. Show first name and last name of patients whose gender is M
     loadPateintInDataFrame.select("firstName","lastName","gender").where("gender ='M' ").show()
@@ -55,8 +64,14 @@ object DataframeTransformation {
     loadPateintInDataFrame.join(loadProvinceInDataFrame,loadPateintInDataFrame("provinceId")===loadProvinceInDataFrame("provinceId")).select("firstName","lastName","provinceName").show()
 
 
+    //Medium
+    //8. Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'.
+    val joinPateintWithAdmission= loadAdmissionInDataFrame.join(loadPateintInDataFrame,Seq("patientId"))
+    joinPateintWithAdmission.select("patientId","firstName","lastName","diagnosis").where("diagnosis='Dementia' ").show()
 
-9
+
+
+
   }
 
 }
