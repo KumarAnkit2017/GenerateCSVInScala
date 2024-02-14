@@ -11,6 +11,7 @@ class RandamDataGenerator {
 
   val dataList = List("AB", "BC", "MB", "NB", "NL", "NT", "NS", "NU")
 
+
   def writeCsv(outputPath: String, noOfRecords: Integer): Unit = {
 
     Using(new CSVWriter(new FileWriter(outputPath))) { writer =>

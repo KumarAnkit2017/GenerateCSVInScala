@@ -26,4 +26,12 @@ case class PatientsFirstName(
                               firstName: String,
                             )
 
+case class PatientsDOBYears(years: Int)
+
+case class PatientsNameByGroup(firstName: String,
+                               noOfRecords:Int)
+
+
+
+
 

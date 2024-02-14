@@ -1,6 +1,6 @@
 package com.gitbub.ka1904787.dataset
 
-import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, ProvinceName}
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 
 object DatasetTranformation {
@@ -73,7 +73,21 @@ object DatasetTranformation {
     //Medium
     //8. Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'.
     val joinPateintWithAdmission=loadPateintInDataSet.joinWith(loadAdmissionInDataSet,loadAdmissionInDataSet("patientId")===loadPateintInDataSet("patientId"))
-    joinPateintWithAdmission.map(pateintAdmission=>AdmissionAndPatient(pateintAdmission._1.patientId,pateintAdmission._1.firstName,pateintAdmission._1.lastName,pateintAdmission._2.diagnosis)).filter(dementiaPatient=>dementiaPatient.diagnosis=="Dementia")show(100)
+    joinPateintWithAdmission.map(pateintAdmission=>AdmissionAndPatient(pateintAdmission._1.patientId,pateintAdmission._1.firstName,pateintAdmission._1.lastName,pateintAdmission._2.diagnosis)).filter(dementiaPatient=>dementiaPatient.diagnosis=="Dementia").show(100)
+
+
+    //9. SELECT distinct year(birth_date) as birth_date FROM patients order by birth_date asc
+    loadPateintInDataSet.map(patient=> PatientsDOBYears(patient.birthDate.toLocalDate.getYear)).distinct().sort("years").show()
+
+
+    //10. Show unique first names from the patients table which only occurs once in the list.
+    //For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list.
+    // If only 1 person is named 'Leo' then include them in the output.
+    loadPateintInDataSet.groupByKey(firstName=>firstName.firstName).mapGroups((firstNamekey,recordsValue)=>{
+      val firstName= firstNamekey
+      val listOfRecords= recordsValue.toList.size
+      PatientsNameByGroup(firstName,listOfRecords)
+    }).filter(uniqueFirstName=>uniqueFirstName.noOfRecords==1).show()
 
 
 

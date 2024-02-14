@@ -1,9 +1,10 @@
 package com.gitbub.ka1904787.dataframe
 
-import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsFirstName, PatientsName, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, ProvinceName}
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
-import org.apache.spark.sql.functions.{aggregate, coalesce, col, concat, lit}
+import org.apache.spark.sql.catalyst.expressions.Year
+import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
+import org.apache.spark.sql.functions.{aggregate, asc, coalesce, col, concat, desc, lit, year}
 
 object DataframeTransformation {
 
@@ -69,7 +70,14 @@ object DataframeTransformation {
     val joinPateintWithAdmission= loadAdmissionInDataFrame.join(loadPateintInDataFrame,Seq("patientId"))
     joinPateintWithAdmission.select("patientId","firstName","lastName","diagnosis").where("diagnosis='Dementia' ").show()
 
+    //9. SELECT distinct year(birth_date) as birth_date FROM patients order by birth_date asc
+    loadPateintInDataFrame.select("birthDate").withColumn("birthDate",year(col("birthDate"))).distinct().sort( asc("birthDate")).show();
 
+
+    //10. Show unique first names from the patients table which only occurs once in the list.
+    //For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list.
+    // If only 1 person is named 'Leo' then include them in the output.
+    loadPateintInDataFrame.select("firstName").groupBy("firstName").count().filter("count==1").show()
 
 
   }
