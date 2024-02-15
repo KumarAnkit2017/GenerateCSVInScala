@@ -1,6 +1,6 @@
 package com.gitbub.ka1904787.dataset
 
-import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, PatientsNameHaving6Letter, ProvinceName}
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 
 object DatasetTranformation {
@@ -89,6 +89,9 @@ object DatasetTranformation {
       PatientsNameByGroup(firstName,listOfRecords)
     }).filter(uniqueFirstName=>uniqueFirstName.noOfRecords==1).show()
 
+
+    //11. Show patient_id and first_name from patients where their first_name start and ends with 's' and is at least 6 characters long.
+    loadPateintInDataSet.filter(x => x.firstName.startsWith("s") && x.firstName.endsWith("s") && x.firstName.length >= 6).map(patients=>PatientsNameHaving6Letter(patients.patientId,patients.firstName)).show()
 
 
 

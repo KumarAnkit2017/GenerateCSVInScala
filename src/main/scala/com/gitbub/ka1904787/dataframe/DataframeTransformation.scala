@@ -1,10 +1,10 @@
 package com.gitbub.ka1904787.dataframe
 
-import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, ProvinceName}
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, PatientsNameHaving6Letter, ProvinceName}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.catalyst.expressions.Year
 import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
-import org.apache.spark.sql.functions.{aggregate, asc, coalesce, col, concat, desc, lit, year}
+import org.apache.spark.sql.functions.{aggregate, asc, coalesce, col, concat, desc, length, lit, when, year}
 
 object DataframeTransformation {
 
@@ -78,6 +78,11 @@ object DataframeTransformation {
     //For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list.
     // If only 1 person is named 'Leo' then include them in the output.
     loadPateintInDataFrame.select("firstName").groupBy("firstName").count().filter("count==1").show()
+
+
+
+
+
 
 
   }

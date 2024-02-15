@@ -22,8 +22,8 @@ class RandamDataGenerator {
       for (patient <- 1 to noOfRecords) {
         val record =Patients(
           patient,
-          randomName(5),
-          randomName(8),
+          randomName(10),
+          randomName(10),
           randomGender(),
           randomBirthDate(),
           randomName(8),

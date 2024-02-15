@@ -31,6 +31,9 @@ case class PatientsDOBYears(years: Int)
 case class PatientsNameByGroup(firstName: String,
                                noOfRecords:Int)
 
+case class PatientsNameHaving6Letter(patientId: Int,
+                               firstName:String)
+
 
 
 
