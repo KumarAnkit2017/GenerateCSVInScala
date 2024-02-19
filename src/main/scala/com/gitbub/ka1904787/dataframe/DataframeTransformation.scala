@@ -1,5 +1,6 @@
 package com.gitbub.ka1904787.dataframe
 
+import com.gitbub.ka1904787.Configuration.AppConfiguration
 import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, PatientsNameHaving6Letter, ProvinceName}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.catalyst.expressions.Year
@@ -12,15 +13,18 @@ object DataframeTransformation {
     ///Entry point of spark application and my master is running on locally
     val spark = SparkSession.builder().appName("DataFrameTransformation").master("local").getOrCreate();
 
-    ////Csv Patient Path
-    val csvPatientPath = "E:\\Scala\\PatientsRecords.csv"
+    // Config Property File
+    val config = new AppConfiguration()
 
     ////Csv Patient Path
-    val csvProvincePath = "E:\\Scala\\province_names.csv"
+    val csvPatientPath = config.csvPath("csv-path.patientPath")
+
+    ////Csv Patient Path
+    val csvProvincePath = config.csvPath("csv-path.provincePath")
 
 
     // admission path
-    val csvAdmissionPath = "E:\\Scala\\admision.csv"
+    val csvAdmissionPath = config.csvPath("csv-path.admissionpath")
 
     //Loading Patient CSV File in Dataset
     import spark.implicits._

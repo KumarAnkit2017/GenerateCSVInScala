@@ -1,6 +1,7 @@
 package com.gitbub.ka1904787.dataset
 
-import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsName, PatientsNameByGroup, PatientsNameHaving6Letter, ProvinceName}
+import com.gitbub.ka1904787.Configuration.AppConfiguration
+import com.gitbub.ka1904787.schemas.{Admission, AdmissionAndPatient, PatientProvince, Patients, PatientsDOBYears, PatientsFirstName, PatientsGroupByWeight, PatientsName, PatientsNameByGroup, PatientsNameHaving6Letter, ProvinceName}
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 
 object DatasetTranformation {
@@ -11,14 +12,17 @@ object DatasetTranformation {
     ///Entry point of spark application and my master is running on locally
     val spark = SparkSession.builder().appName("Dataset Transformation").master("local").getOrCreate();
 
-    ////Csv Patient Path
-    val csvPatientPath = "E:\\Scala\\PatientsRecords.csv"
+    // Config Property File
+    val config = new AppConfiguration()
 
     ////Csv Patient Path
-    val csvProvincePath = "E:\\Scala\\province_names.csv"
+    val csvPatientPath:String = config.csvPath("csv-path.patientPath")
+
+    ////Csv Patient Path
+    val csvProvincePath = config.csvPath("csv-path.provincePath")
 
     // admission path
-    val csvAdmissionPath = "E:\\Scala\\admision.csv"
+    val csvAdmissionPath = config.csvPath("csv-path.admissionpath")
 
     //Loading Patient CSV File in Dataset
     import spark.implicits._
@@ -92,6 +96,23 @@ object DatasetTranformation {
 
     //11. Show patient_id and first_name from patients where their first_name start and ends with 's' and is at least 6 characters long.
     loadPateintInDataSet.filter(x => x.firstName.startsWith("s") && x.firstName.endsWith("s") && x.firstName.length >= 6).map(patients=>PatientsNameHaving6Letter(patients.patientId,patients.firstName)).show()
+
+    //Hard
+    //12. Show all of the patients grouped into weight groups.
+    //Show the total amount of patients in each weight group.
+    //Order the list by the weight group decending.
+    //For example, if they weight 100 to 109 they are placed in the 100 weight group, 110-119 = 110 weight group, etc.
+    loadPateintInDataSet.groupByKey(patients=>patients.weight).mapGroups((patientsWeight,patientGrp)=>{
+
+      val patientsWeights= (patientsWeight/10)*10
+      val patientGroups= patientGrp.toList
+      PatientsGroupByWeight(patientsWeights,patientGroups.size)
+
+    }).groupByKey(patientsWeights=>patientsWeights.wight).
+      mapGroups((patientsWeight,patientGrp)=>PatientsGroupByWeight(patientsWeight,patientGrp.
+        map(patients_groups=>patients_groups.patients_groups).sum)).show()
+
+
 
 
 

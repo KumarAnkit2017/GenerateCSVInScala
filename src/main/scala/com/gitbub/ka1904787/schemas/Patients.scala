@@ -34,6 +34,8 @@ case class PatientsNameByGroup(firstName: String,
 case class PatientsNameHaving6Letter(patientId: Int,
                                firstName:String)
 
+case class PatientsGroupByWeight(wight:Int,patients_groups: Int)
+
 
 
 
